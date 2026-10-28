@@ -1,41 +1,16 @@
-# Knowledge Vault V2
+# Knowledge Vault V2 — Edited
 
-A GitHub Pages-friendly personal knowledge database.
+## Requested changes implemented
 
-## V2 additions
+- Removed the one-press concept deletion control. Concepts no longer have a delete button.
+- Concepts are editable: name and detailed explanation can be changed and saved.
+- Multiple images can be attached to Notes.
+- Multiple images can be attached to each individual Concept.
+- Images appear as compact inline visual cards with captions rather than a large generic screenshot block.
+- Images can be opened larger and removed individually.
+- Improved dashboard/editor visual hierarchy.
+- Added a Review Queue to surface unfinished or stale topics.
+- Kept the AI workspace and knowledge graph.
 
-- Visual topic dashboard
-- Notes + screenshot + source + concept storage
-- Topic-to-topic connections
-- Interactive knowledge graph
-- Search across notes/concepts/topics
-- Recent and favorites views
-- AI Workspace that packages your library into prompts
-- Six AI workflows: explain, connect, gaps, quiz, chapter, compare
-- Markdown chapter export
-- JSON backup/restore
-- Print-friendly architecture for future PDF/DOCX generation
-
-## GitHub Pages
-
-Upload `index.html`, `styles.css`, and `app.js` to a repository, then enable GitHub Pages from the `main` branch/root.
-
-## Important V2 architecture decision
-
-The static GitHub version does NOT put an OpenAI API key in browser code. The AI Workspace generates clean prompts/context that can be copied to ChatGPT.
-
-For a real integrated AI backend, the next version should use a server-side function (for example Cloudflare Workers, Vercel Functions, or Supabase Edge Functions) so the API key remains private.
-
-## Recommended V3
-
-- IndexedDB for much larger screenshot storage
-- Cloud sync + login
-- OCR from screenshots
-- AI-generated summaries and concept extraction
-- Automatic linking between related topics
-- PDF/DOCX book generation
-- "Send to ChatGPT" integration
-- Version history
-- Tags and collections
-- Timeline of when each concept was learned
-- Full-text + semantic search
+## Important
+The GitHub Pages version stores data in browser storage. Use Backup Library regularly. For a large screenshot collection, V3 should move images to IndexedDB/cloud storage.
