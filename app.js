@@ -1,5 +1,7 @@
-const KEY="knowledge_vault_v2_edited";
-let state=JSON.parse(localStorage.getItem(KEY)||'{"topics":[]}'),active=null,view="library";
+const KEY="knowledge_vault_v2";
+const LEGACY_KEY="knowledge_vault_v2_edited";
+const stored=localStorage.getItem(KEY)||localStorage.getItem(LEGACY_KEY)||'{"topics":[]}';
+let state=JSON.parse(stored),active=null,view="library";
 const $=id=>document.getElementById(id), esc=s=>(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])), uid=()=>crypto.randomUUID?.()||Date.now()+"-"+Math.random();
 function migrate(){state.topics.forEach(t=>{t.noteImages??=t.images??[];t.concepts=(t.concepts||[]).map(c=>typeof c==="string"?{name:c,detail:"",images:[]}:({...c,images:c.images||[]}));t.sources??=[];t.links??=[];t.favorite??=false;t.updated??=Date.now();delete t.images})}
 migrate();
