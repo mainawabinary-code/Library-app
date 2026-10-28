@@ -1,70 +1,15 @@
-K
-Knowledge VaultPersonal learning system
-＋ New topic
-▦ Library◷ Recent★ Favorites◎ Knowledge graph
-✦ AI workspace✓ Review queue
-↓ Backup library↑ Restore backup
-PERSONAL KNOWLEDGE SYSTEM
-My knowledge
-Capture information once. Build understanding over time.
-
-⌕
-Search topics, notes, concepts…
-Export
-0Topics
-0Topics with notes
-0Images saved
-0Concepts
-✦ ＋ ◌
-Build your knowledge library
-Create boxes for ETFs, Bonds, IPOs, Mortgages, Repos, Banks — anything you study.
-
-Create first topic
-CONNECTIONS
-Knowledge graph
-See how your topics relate.
-
-REVIEW
-Review queue
-Topics that look unfinished or haven't been revisited recently.
-
-← Library
-Saved locally
-☆✦ AI toolsDelete topic
-✎ Notes◆ Concepts↗ Sources◎ Connections
-CAPTURE
-What I learned
-Add screenshots directly into your notes.
-
-＋ Add imagesExport chapter
-Write exactly what you discover…\n\nUseful structure:\n• What is it?\n• How does it work?\n• Why does it exist?\n• Who participates?\n• Real example\n• Numbers / facts\n• Questions\n• Connections
-
-CONCEPT INDEX
-Key concepts
-Concepts are editable and can contain multiple images.
-
-＋ Add images
-Concept name
-Explanation, mechanism, example or observation…
-
-Add concept
-REFERENCE
-Sources
-Keep the original trail behind your learning.
-
-Source name
-https://…
-Add
-RELATIONSHIPS
-Connected topics
-Build the structure of your knowledge.
-
-AI WORKSPACE
-Work with your knowledge
-×
-Your material is packaged into a structured prompt. No API key is exposed in GitHub Pages.
-
-Explain deeplyFind connectionsFind gapsQuiz meCreate chapterCompare concepts
-Your AI-ready prompt will appear here…
-
-Copy promptSave prompt
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Knowledge Vault V2</title><link rel="stylesheet" href="styles.css"></head><body>
+<div class="app-shell"><aside class="sidebar"><div class="brand"><div class="logo">K</div><div><b>Knowledge Vault</b><small>Personal learning system</small></div></div><button id="newTopic" class="primary">＋ New topic</button><nav><button class="nav active" data-view="library">▦ Library</button><button class="nav" data-view="recent">◷ Recent</button><button class="nav" data-view="favorites">★ Favorites</button><button class="nav" data-view="graph">◎ Knowledge graph</button></nav><div class="sidebar-divider"></div><button id="aiPack" class="nav">✦ AI workspace</button><button id="reviewBtn" class="nav">✓ Review queue</button><div class="sidebar-bottom"><button id="backup" class="nav">↓ Backup library</button><label class="nav">↑ Restore backup<input id="restore" type="file" accept=".json" hidden></label></div></aside>
+<main class="main"><header class="topbar"><div><span class="eyebrow">PERSONAL KNOWLEDGE SYSTEM</span><h1 id="heading">My knowledge</h1><p>Capture information once. Build understanding over time.</p></div><div class="top-actions"><div class="search-wrap">⌕<input id="search" placeholder="Search topics, notes, concepts…"></div><button id="exportAll" class="secondary">Export</button></div></header>
+<section id="libraryView"><div class="stats"><div><b id="statTopics">0</b><span>Topics</span></div><div><b id="statNotes">0</b><span>Topics with notes</span></div><div><b id="statImages">0</b><span>Images saved</span></div><div><b id="statConcepts">0</b><span>Concepts</span></div></div><div id="cards" class="cards"></div><div id="empty" class="empty hidden"><div class="empty-art">✦ ＋ ◌</div><h2>Build your knowledge library</h2><p>Create boxes for ETFs, Bonds, IPOs, Mortgages, Repos, Banks — anything you study.</p><button class="primary" id="emptyNew">Create first topic</button></div></section>
+<section id="graphView" class="hidden"><div class="section-head"><div><span class="eyebrow">CONNECTIONS</span><h2>Knowledge graph</h2></div><p>See how your topics relate.</p></div><canvas id="graph"></canvas></section>
+<section id="reviewView" class="hidden"><div class="section-head"><div><span class="eyebrow">REVIEW</span><h2>Review queue</h2></div><p>Topics that look unfinished or haven't been revisited recently.</p></div><div id="reviewList" class="review-list"></div></section></main></div>
+<dialog id="newDialog"><form class="dialog" id="newForm"><button type="button" class="close" onclick="newDialog.close()">×</button><span class="eyebrow">NEW KNOWLEDGE BOX</span><h2>Create a topic</h2><label>Name<input id="newName" required placeholder="ETFs"></label><label>Description<textarea id="newDesc" placeholder="What are you learning here?"></textarea></label><button class="primary full">Create topic</button></form></dialog>
+<div id="editor" class="overlay hidden"><div class="editor"><header class="editor-top"><button id="closeEditor" class="secondary">← Library</button><div class="editor-title-wrap"><input id="title"><small id="saveStatus">Saved locally</small></div><button id="fav" class="square">☆</button><button id="aiTopic" class="secondary">✦ AI tools</button><button id="delete" class="danger">Delete topic</button></header><div class="editor-body"><aside class="tabs"><button class="tab active" data-tab="notes">✎ Notes</button><button class="tab" data-tab="concepts">◆ Concepts</button><button class="tab" data-tab="sources">↗ Sources</button><button class="tab" data-tab="connections">◎ Connections</button></aside><div class="content">
+<div id="tab-notes" class="tabpane"><div class="section-head"><div><span class="eyebrow">CAPTURE</span><h2>What I learned</h2><p>Add screenshots directly into your notes.</p></div><div class="head-actions"><label class="secondary upload">＋ Add images<input id="noteImages" type="file" accept="image/*" multiple hidden></label><button id="cleanExport" class="secondary">Export chapter</button></div></div><div class="note-canvas"><textarea id="notes" class="big-text" placeholder="Write exactly what you discover…\n\nUseful structure:\n• What is it?\n• How does it work?\n• Why does it exist?\n• Who participates?\n• Real example\n• Numbers / facts\n• Questions\n• Connections"></textarea><div id="noteImagesGrid" class="inline-images"></div></div></div>
+<div id="tab-concepts" class="tabpane hidden"><div class="section-head"><div><span class="eyebrow">CONCEPT INDEX</span><h2>Key concepts</h2><p>Concepts are editable and can contain multiple images.</p></div><label class="secondary upload">＋ Add images<input id="conceptImages" type="file" accept="image/*" multiple hidden></label></div><div class="concept-editor"><div class="add-concept"><input id="conceptInput" placeholder="Concept name"><textarea id="conceptDetail" placeholder="Explanation, mechanism, example or observation…"></textarea><button id="addConcept" class="primary">Add concept</button></div><div id="conceptCards" class="concept-cards"></div></div></div>
+<div id="tab-sources" class="tabpane hidden"><div class="section-head"><div><span class="eyebrow">REFERENCE</span><h2>Sources</h2><p>Keep the original trail behind your learning.</p></div></div><div id="sources"></div><div class="add-line"><input id="sourceName" placeholder="Source name"><input id="sourceUrl" placeholder="https://…"><button id="addSource" class="primary">Add</button></div></div>
+<div id="tab-connections" class="tabpane hidden"><div class="section-head"><div><span class="eyebrow">RELATIONSHIPS</span><h2>Connected topics</h2><p>Build the structure of your knowledge.</p></div></div><div id="connections"></div></div>
+</div></div></div></div>
+<div id="aiPanel" class="ai-panel hidden"><div class="ai-head"><div><span class="eyebrow">AI WORKSPACE</span><h2>Work with your knowledge</h2></div><button id="closeAI" class="square">×</button></div><p class="muted">Your material is packaged into a structured prompt. No API key is exposed in GitHub Pages.</p><div class="ai-grid"><button data-ai="explain">Explain deeply</button><button data-ai="connect">Find connections</button><button data-ai="gaps">Find gaps</button><button data-ai="quiz">Quiz me</button><button data-ai="chapter">Create chapter</button><button data-ai="compare">Compare concepts</button></div><textarea id="aiPrompt" class="ai-text" placeholder="Your AI-ready prompt will appear here…"></textarea><div class="ai-actions"><button id="copyAI" class="primary">Copy prompt</button><button id="downloadAI" class="secondary">Save prompt</button></div></div>
+<script src="app.js"></script></body></html>
