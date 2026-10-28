@@ -1,16 +1,28 @@
-# Knowledge Vault V2 — Edited
+# Knowledge Vault V2.1
 
-## Requested changes implemented
+A GitHub Pages personal knowledge system for organizing topics, notes, concepts, screenshots, sources, connections, review items, and AI-ready prompts.
 
-- Removed the one-press concept deletion control. Concepts no longer have a delete button.
-- Concepts are editable: name and detailed explanation can be changed and saved.
-- Multiple images can be attached to Notes.
-- Multiple images can be attached to each individual Concept.
-- Images appear as compact inline visual cards with captions rather than a large generic screenshot block.
-- Images can be opened larger and removed individually.
-- Improved dashboard/editor visual hierarchy.
-- Added a Review Queue to surface unfinished or stale topics.
-- Kept the AI workspace and knowledge graph.
+## V2.1 fixes
+- Preserves the original `knowledge_vault_v2` browser storage key so existing local data remains available.
+- Reads the previous `knowledge_vault_v2_edited` key as a fallback.
+- Fixes mobile sidebar labels so navigation text remains visible.
+- Fixes layout selector mismatches between the HTML and CSS.
+- Makes text inputs, textareas, captions, and concept editors explicitly readable.
+- Keeps multiple images in Notes and Concepts.
+- Keeps editable Concepts and removes the one-press concept deletion control.
+- Keeps Backup/Restore, Review Queue, Knowledge Graph, and AI Workspace.
+
+## Storage
+The app stores its working library in the browser's local storage. Export a JSON backup regularly. Large screenshot collections may eventually be better moved to IndexedDB/cloud object storage in a future version.
+
+## GitHub Pages
+Upload these four files to the repository root:
+- `index.html`
+- `styles.css`
+- `app.js`
+- `README.md`
+
+GitHub Pages should deploy from the branch/folder containing the root `index.html`.
 
 ## Important
-The GitHub Pages version stores data in browser storage. Use Backup Library regularly. For a large screenshot collection, V3 should move images to IndexedDB/cloud storage.
+Do not clear the browser's site data if you want to keep the current local library. Keep a downloaded JSON backup before major upgrades.
