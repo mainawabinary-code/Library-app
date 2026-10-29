@@ -37,3 +37,69 @@
     font-size: 14px !important;
   }
 }
+
+
+/* Knowledge Vault V2 — Mobile sidebar label restoration */
+@media (max-width: 800px) {
+  .sidebar {
+    width: 220px !important;
+    padding: 15px 12px !important;
+    gap: 16px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  .sidebar .brand {
+    width: 100% !important;
+  }
+
+  .sidebar .brand div:not(.logo) {
+    display: block !important;
+    font-size: 13px !important;
+  }
+
+  .sidebar .brand small {
+    display: block !important;
+    font-size: 10px !important;
+  }
+
+  .sidebar .primary,
+  .sidebar .nav,
+  .sidebar nav .nav,
+  .sidebar .sidebarBottom .nav {
+    display: flex !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-height: 42px !important;
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+    line-height: 1.2 !important;
+    text-align: left !important;
+    text-indent: 0 !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    color: var(--text) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .sidebar nav {
+    display: grid !important;
+    gap: 4px !important;
+    width: 100% !important;
+  }
+
+  .sidebar .sidebarBottom {
+    display: grid !important;
+    width: 100% !important;
+  }
+
+  .sidebar .nav.active {
+    color: var(--text) !important;
+  }
+
+  .main {
+    margin-left: 220px !important;
+    padding: 25px 16px !important;
+  }
+}
