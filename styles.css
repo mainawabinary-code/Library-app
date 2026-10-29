@@ -11,3 +11,26 @@
 .aiPanel{position:fixed;right:22px;bottom:22px;width:min(670px,calc(100vw - 44px));background:#111821;border:1px solid #39465a;border-radius:16px;padding:20px;z-index:30;box-shadow:0 25px 80px #000b}.aiHead{display:flex;justify-content:space-between}.aiHead h2{margin:6px 0}.aiGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:17px 0}.aiGrid button{border:1px solid var(--line);background:#171f29;color:var(--text);border-radius:9px;padding:11px}.aiGrid button:hover{border-color:#596a8a}.aiActions{display:flex;gap:8px;margin-top:8px}
 @media(max-width:800px){.main{padding:78px 12px 25px}.top{flex-direction:column;align-items:stretch;gap:15px}.top h1{font-size:30px}.topRight{width:100%}.topRight input{width:100%;min-width:0}.stats{grid-template-columns:repeat(2,1fr);gap:8px}.stats div{padding:11px}.stats b{font-size:20px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.card{min-height:145px;padding:12px;border-radius:13px}.card h3{font-size:15px}.card p{font-size:10px}.meta{font-size:8px}.cardIcon{width:34px;height:34px}.overlay{padding:58px 0 0}.editor{border-radius:0;border-left:0;border-right:0}.editorTop{min-height:62px;padding:8px}.editorTop .secondary{font-size:11px;padding:8px}.editorTitle input{font-size:16px}.tabs{height:50px;padding:6px 8px}.tab{font-size:11px;padding:8px 10px}.content{padding:18px 12px}.sectionHead h2{font-size:21px}.sectionHead{align-items:flex-start}.bigText{min-height:40vh}.imageGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.imageGrid.compact{grid-template-columns:repeat(3,minmax(0,1fr))}.conceptList{grid-template-columns:1fr}.subtopicList{grid-template-columns:1fr}.addline{flex-wrap:wrap}.addline input{min-width:45%}.aiPanel{right:10px;bottom:10px;width:calc(100vw - 20px)}.aiGrid{grid-template-columns:repeat(2,1fr)} }
 @media(min-width:801px) and (max-width:1100px){.cards{grid-template-columns:repeat(3,minmax(0,1fr))}.main{padding:82px 28px 32px}.topRight input{width:240px}}
+
+/* Topic containers: child topics live directly inside the parent workspace. */
+.childTopicsPanel{border:1px solid var(--line);background:linear-gradient(145deg,#111821,#0d131a);border-radius:14px;padding:14px 16px;margin-bottom:10px;flex:none}
+.childTopicsHead{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:10px}
+.childTopicsHead h3{margin:5px 0 2px;font-size:15px;letter-spacing:-.01em}
+.childTopicsHead p{margin:0;color:var(--muted);font-size:10px;line-height:1.45}
+.childTopicList{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}
+.childTopicCard{position:relative;min-height:92px;border:1px solid #293442;border-radius:11px;background:#0e151d;padding:11px 32px 11px 11px;display:grid;grid-template-columns:32px 1fr;column-gap:9px;align-items:start;cursor:pointer;transition:.15s}
+.childTopicCard:hover{border-color:#506052;background:#121a22;transform:translateY(-1px)}
+.childTopicIcon{width:32px;height:32px;border-radius:9px;background:#1b242e;color:#bfc9c1;display:grid;place-items:center;font-size:9px;font-weight:900}
+.childTopicMain h4{margin:1px 0 3px;font-size:13px;line-height:1.2}
+.childTopicMain p{margin:0;color:var(--muted);font-size:9px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.childTopicMeta{grid-column:2;color:#697688;font-size:8px;margin-top:7px;line-height:1.35}
+.childTopicArrow{position:absolute;right:11px;top:50%;transform:translateY(-50%);color:#738171;font-size:20px}
+.childTopicEmpty{border:1px dashed #303a49;border-radius:10px;padding:12px;text-align:center;color:#768397;font-size:10px}
+.childTopicEmpty b{color:#b9c5bd}
+@media(max-width:800px){.childTopicsPanel{padding:11px 10px;margin-bottom:7px;border-radius:11px}.childTopicsHead{align-items:center}.childTopicsHead h3{font-size:13px}.childTopicsHead p{font-size:9px}.childTopicsHead .secondary{padding:8px 9px;font-size:10px}.childTopicList{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.childTopicCard{min-height:84px;padding:9px 25px 9px 9px;grid-template-columns:27px 1fr;column-gap:7px}.childTopicIcon{width:27px;height:27px;border-radius:8px;font-size:8px}.childTopicMain h4{font-size:11px}.childTopicMain p{font-size:8px}.childTopicMeta{font-size:7px;margin-top:5px}.childTopicArrow{right:7px;font-size:16px}.childTopicEmpty{padding:10px;font-size:9px}}
+
+
+/* Compact add-topic control: keep it as a small top action, never a large card. */
+.addTopicCompact{width:38px;height:34px;flex:0 0 38px;padding:0;border:1px solid var(--line);border-radius:9px;background:#151c24;color:var(--text);font-size:20px;line-height:1;display:grid;place-items:center;cursor:pointer}
+.addTopicCompact:hover{border-color:#66746a;background:#1b2425}
+@media(max-width:800px){.addTopicCompact{width:34px;height:32px;flex-basis:34px;font-size:18px}}

@@ -73,11 +73,22 @@
 <button id="fav" class="square">☆</button><button id="aiTopic" class="secondary">✦ AI tools</button>
 </header>
 <div class="editorBody">
+  <div class="childTopicsPanel" id="childTopicsPanel">
+    <div class="childTopicsHead">
+      <div>
+        <span class="eyebrow">TOPIC STRUCTURE</span>
+        <h3 id="childTopicsTitle">Related topics</h3>
+        <p id="childTopicsHint">This topic can stand alone or contain smaller topics inside it.</p>
+      </div>
+      <button id="newSubtopic" class="addTopicCompact" aria-label="Add topic inside this topic" title="Add topic inside this topic">＋</button>
+    </div>
+    <div id="childTopicList" class="childTopicList"></div>
+    <div id="childTopicEmpty" class="childTopicEmpty">No topics inside this one yet. Use <b>＋ Add topic</b> to turn this into a container.</div>
+  </div>
   <div class="tabs" id="editorTabs">
     <button class="tab active" data-tab="notes">Notes</button>
     <button class="tab" data-tab="screens">Screenshots</button>
     <button class="tab" data-tab="concepts">Concepts</button>
-    <button class="tab" data-tab="subtopics">Subtopics</button>
     <button class="tab" data-tab="sources">Sources</button>
     <button class="tab" data-tab="connections">Connections</button>
   </div>
@@ -110,12 +121,6 @@ Useful pattern:
       <div id="conceptEmpty" class="emptySmall">No concepts yet. Create the first one above.</div>
     </div>
 
-    <div id="tab-subtopics" class="tabpane hidden">
-      <div class="sectionHead"><div><span class="eyebrow">TOPIC HIERARCHY</span><h2>Subtopics</h2><p>Use a parent topic as a container when one subject naturally contains several related subjects.</p></div><button id="newSubtopic" class="primary">＋ Add subtopic</button></div>
-      <div id="subtopicList" class="subtopicList"></div>
-      <div id="subtopicEmpty" class="emptySmall">No subtopics yet. This topic can remain a single subject or become a container.</div>
-    </div>
-
     <div id="tab-sources" class="tabpane hidden">
       <div class="sectionHead"><div><span class="eyebrow">REFERENCE</span><h2>Sources</h2></div></div>
       <div id="sources"></div><div class="addline"><input id="sourceName" placeholder="Source name"><input id="sourceUrl" placeholder="https://…"><button id="addSource" class="primary">Add</button></div>
@@ -142,10 +147,10 @@ Useful pattern:
 <dialog id="subtopicDialog">
 <form class="dialog" id="subtopicForm">
 <button type="button" class="close" onclick="subtopicDialog.close()">×</button>
-<span class="eyebrow">TOPIC HIERARCHY</span><h2>Add subtopic</h2>
-<label>Subtopic name<input id="subtopicName" required placeholder="Physical equity ETFs"></label>
-<label>Description<textarea id="subtopicDesc" placeholder="What does this subtopic cover?"></textarea></label>
-<button class="primary">Create subtopic</button>
+<span class="eyebrow">TOPIC STRUCTURE</span><h2>Add topic inside</h2>
+<label>Topic name<input id="subtopicName" required placeholder="QuickMart"></label>
+<label>Description<textarea id="subtopicDesc" placeholder="What does this topic cover?"></textarea></label>
+<button class="primary">Add topic</button>
 </form>
 </dialog>
 

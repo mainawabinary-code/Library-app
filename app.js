@@ -39,7 +39,7 @@ function render(){
   if(view==="recent")ts.sort((a,b)=>b.updated-a.updated);
   if(view==="favorites")ts=ts.filter(t=>t.favorite);
   if(q)ts=ts.filter(t=>(t.title+" "+t.desc+" "+t.notes+" "+t.concepts.map(c=>c.title+" "+c.detail).join(" ")+" "+t.subtopics.map(s=>s.title+" "+s.desc).join(" ")).toLowerCase().includes(q));
-  $("cards").innerHTML=ts.map(t=>`<article class="card" data-id="${t.id}"><div><div class="cardIcon">${esc(initials(t.title))}</div><h3>${esc(t.title)} ${t.favorite?"★":""}${t.subtopics.length?`<span class="subBadge">${t.subtopics.length} subtopic${t.subtopics.length===1?"":"s"}</span>`:""}</h3><p>${esc(t.desc||"No description yet.")}</p></div><div class="meta"><span>${hasNotes(t)?"Notes":"No notes"}</span><span>${allTopicImages(t)} images</span><span>${allConcepts(t)} concepts</span></div></article>`).join("");
+  $("cards").innerHTML=ts.map(t=>`<article class="card" data-id="${t.id}"><div><div class="cardIcon">${esc(initials(t.title))}</div><h3>${esc(t.title)} ${t.favorite?"★":""}${t.subtopics.length?`<span class="subBadge">${t.subtopics.length} inside</span>`:""}</h3><p>${esc(t.desc||"No description yet.")}</p></div><div class="meta"><span>${hasNotes(t)?"Notes":"No notes"}</span><span>${allTopicImages(t)} images</span><span>${allConcepts(t)} concepts</span></div></article>`).join("");
   $("empty").classList.toggle("hidden",ts.length>0);$("cards").classList.toggle("hidden",!ts.length);
   $("statTopics").textContent=state.topics.length;
   $("statNotes").textContent=state.topics.filter(hasNotes).length;
@@ -53,7 +53,7 @@ function open(i){
   $("title").value=t.title;$("notes").value=t.notes;$("fav").textContent=t.favorite?"★":"☆";
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelector('.tab[data-tab="notes"]').classList.add("active");
   document.querySelectorAll(".tabpane").forEach(x=>x.classList.add("hidden"));$("tab-notes").classList.remove("hidden");
-  $("closeEditor").textContent="← Library";renderImages();renderNoteImages();renderConcepts();renderSubtopics();renderSources();renderConnections();$("editor").classList.remove("hidden");closeMenu();
+  $("closeEditor").textContent="← Library";renderImages();renderNoteImages();renderConcepts();renderChildTopics();renderSources();renderConnections();$("editor").classList.remove("hidden");closeMenu();
 }
 function touchRecord(t=currentRecord()){if(!t)return;t.updated=Date.now();save();render()}
 
@@ -77,14 +77,37 @@ function renderConcepts(){
 function editConcept(i){let t=topic(),c=t.concepts[i];editingConcept=i;$("conceptDialogTitle").textContent="Edit concept";$("conceptName").value=c.title;$("conceptDetail").value=c.detail;$("conceptDialog").showModal()}
 function createConcept(){editingConcept=null;$("conceptDialogTitle").textContent="Create concept";$("conceptName").value="";$("conceptDetail").value="";$("conceptDialog").showModal()}
 
-function renderSubtopics(){let t=currentRecord();$("subtopicList").innerHTML=t.subtopics.map((s,i)=>`<article class="subtopicCard"><h3>${esc(s.title)}</h3><p>${esc(s.desc||"No description yet.")}</p><div class="subtopicMeta">${s.notes.trim()?"Notes":"No notes"} · ${allTopicImages(s)} images · ${allConcepts(s)} concepts</div><button class="secondary mini" data-open-sub="${i}">Open subtopic</button></article>`).join("");$("subtopicEmpty").classList.toggle("hidden",t.subtopics.length>0);document.querySelectorAll("[data-open-sub]").forEach(b=>b.onclick=()=>openSubtopic(+b.dataset.openSub))}
-function openSubtopic(i){let parent=currentRecord(),s=parent.subtopics[i];renderSubtopicAsEditor(parent,s);}
+function renderChildTopics(){
+  renderChildTopicsFor(currentRecord());
+}
+function childCard(s,i){
+  const hasChildren=s.subtopics.length>0;
+  return `<article class="childTopicCard" data-child-open="${i}">
+    <div class="childTopicIcon">${esc(initials(s.title))}</div>
+    <div class="childTopicMain"><h4>${esc(s.title)}</h4><p>${esc(s.desc||"Single topic")}</p></div>
+    <div class="childTopicMeta">${hasChildren?`${s.subtopics.length} inside · `:""}${s.notes.trim()?"Notes · ":""}${allTopicImages(s)} images · ${allConcepts(s)} concepts</div>
+    <div class="childTopicArrow">›</div>
+  </article>`;
+}
+function renderChildTopicsFor(t){
+  const list=$("childTopicList");
+  if(!list)return;
+  list.innerHTML=t.subtopics.map((s,i)=>childCard(s,i)).join("");
+  $("childTopicEmpty").classList.toggle("hidden",t.subtopics.length>0);
+  $("childTopicsTitle").textContent=t.subtopics.length?"Topics inside this topic":"Related topics";
+  $("childTopicsHint").textContent=t.subtopics.length?"These are child topics contained inside this topic. Each opens the same full knowledge workspace.":"This topic can stand alone. Add a topic here whenever this subject naturally contains smaller subjects.";
+  document.querySelectorAll("[data-child-open]").forEach(b=>b.onclick=()=>openChildTopic(+b.dataset.childOpen));
+}
+function openChildTopic(i){
+  const parent=currentRecord(),s=parent.subtopics[i];
+  if(!s)return;
+  renderSubtopicAsEditor(parent,s);
+}
 function renderSubtopicAsEditor(parent,s){
-  // Subtopics use the same editor surface while remaining children of the parent.
   $("title").value=s.title;$("notes").value=s.notes;$("fav").textContent=s.favorite?"★":"☆";
   $("editor").classList.remove("hidden");
   document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelector('.tab[data-tab="notes"]').classList.add("active");document.querySelectorAll(".tabpane").forEach(x=>x.classList.add("hidden"));$("tab-notes").classList.remove("hidden");
-  window.__subtopicContext={parent,child:s};$("closeEditor").textContent="← Parent topic";renderImagesFor(s);renderNoteImagesFor(s);renderConceptsFor(s);renderSubtopicsFor(s);renderSourcesFor(s);renderConnectionsFor(s)
+  window.__subtopicContext={parent,child:s};$("closeEditor").textContent="← Parent topic";renderImagesFor(s);renderNoteImagesFor(s);renderConceptsFor(s);renderChildTopicsFor(s);renderSourcesFor(s);renderConnectionsFor(s);
 }
 function clearSubtopicContext(){window.__subtopicContext=null}
 function renderImagesFor(t){$("imageGrid").innerHTML=t.images.map((x,i)=>imageCardFor(x,i,"topic",t)).join("");bindImageControlsFor(t)}
@@ -101,13 +124,13 @@ function renderConceptsFor(t){
   $("conceptEmpty").classList.toggle("hidden",t.concepts.length>0)
 }
 function editChildConcept(t,i){editingConcept={child:t,index:i};let c=t.concepts[i];$("conceptDialogTitle").textContent="Edit concept";$("conceptName").value=c.title;$("conceptDetail").value=c.detail;$("conceptDialog").showModal()}
-function renderSubtopicsFor(t){$("subtopicList").innerHTML=t.subtopics.map((s,i)=>`<article class="subtopicCard"><h3>${esc(s.title)}</h3><p>${esc(s.desc||"No description yet.")}</p><div class="subtopicMeta">${s.notes.trim()?"Notes":"No notes"} · ${allTopicImages(s)} images · ${allConcepts(s)} concepts</div><button class="secondary mini" data-child-open-sub="${i}">Open subtopic</button></article>`).join("");$("subtopicEmpty").classList.toggle("hidden",t.subtopics.length>0);document.querySelectorAll("[data-child-open-sub]").forEach(b=>b.onclick=()=>{let s=t.subtopics[+b.dataset.childOpenSub];window.__subtopicContext={parent:t,child:s};$("closeEditor").textContent="← Parent topic";$("title").value=s.title;$("notes").value=s.notes;renderImagesFor(s);renderNoteImagesFor(s);renderConceptsFor(s);renderSubtopicsFor(s);renderSourcesFor(s);renderConnectionsFor(s)})}
+function renderChildTopicsForNested(t){renderChildTopicsFor(t)}
 function renderSourcesFor(t){$("sources").innerHTML=t.sources.map((x,i)=>`<div class="source"><b>${esc(x.name)}</b><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.url)}</a><button class="remove" data-s-child="${i}">×</button></div>`).join("");document.querySelectorAll("[data-s-child]").forEach(b=>b.onclick=()=>{t.sources.splice(+b.dataset.sChild,1);save();renderSourcesFor(t)})}
 function renderConnectionsFor(t){$("connections").innerHTML=state.topics.filter(x=>x.id!==t.id).map(x=>`<div class="connection"><span>${esc(x.title)}</span><label><input type="checkbox" data-child-link="${x.id}" ${t.links.includes(x.id)?"checked":""}> connect</label></div>`).join("");document.querySelectorAll("[data-child-link]").forEach(c=>c.onchange=()=>{let other=state.topics.find(x=>x.id===c.dataset.childLink);if(c.checked){if(!t.links.includes(other.id))t.links.push(other.id);if(!other.links.includes(t.id))other.links.push(t.id)}else{t.links=t.links.filter(x=>x!==other.id);other.links=other.links.filter(x=>x!==t.id)}save()})}
 
 function renderSources(){renderSourcesFor(currentRecord())}
 function renderConnections(){renderConnectionsFor(currentRecord())}
-function renderCurrentEditor(){let t=currentRecord();$("title").value=t.title;$("notes").value=t.notes;$("fav").textContent=t.favorite?"★":"☆";renderImagesFor(t);renderNoteImagesFor(t);renderConceptsFor(t);renderSubtopicsFor(t);renderSourcesFor(t);renderConnectionsFor(t)}
+function renderCurrentEditor(){let t=currentRecord();$("title").value=t.title;$("notes").value=t.notes;$("fav").textContent=t.favorite?"★":"☆";renderImagesFor(t);renderNoteImagesFor(t);renderConceptsFor(t);renderChildTopicsFor(t);renderSourcesFor(t);renderConnectionsFor(t)}
 
 function markdown(t){return `# ${t.title}\n\n${t.desc}\n\n## What I learned\n\n${t.notes}\n\n## Key concepts\n\n${t.concepts.map(x=>`### ${x.title}\n\n${x.detail}`).join("\n\n")}\n\n## Subtopics\n\n${t.subtopics.map(x=>`- ${x.title}: ${x.desc}`).join("\n")}\n\n## Sources\n\n${t.sources.map(x=>"- "+x.name+": "+x.url).join("\n")}\n\n## Screenshots\n\n${t.images.map((x,i)=>"- Screenshot "+(i+1)+": "+(x.caption||"")).join("\n")}`}
 function download(name,data,type="text/plain"){let a=document.createElement("a");a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
@@ -118,7 +141,7 @@ $("newTopic").onclick=$("emptyNew").onclick=()=>$("newDialog").showModal();
 $("newForm").onsubmit=e=>{e.preventDefault();let t={id:id(),title:$("newName").value.trim(),desc:$("newDesc").value.trim(),notes:"",images:[],noteImages:[],concepts:[],sources:[],links:[],subtopics:[],favorite:false,updated:Date.now()};state.topics.unshift(t);save();$("newForm").reset();$("newDialog").close();render();open(t.id)};
 $("search").oninput=render;
 document.querySelectorAll(".nav[data-view]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav[data-view]").forEach(x=>x.classList.remove("active"));b.classList.add("active");view=b.dataset.view;if(view==="graph")renderGraph();else{$("graphView").classList.add("hidden");$("libraryView").classList.remove("hidden")}render();closeMenu()});
-$("closeEditor").onclick=()=>{if(window.__subtopicContext){let p=window.__subtopicContext.parent;window.__subtopicContext=null;$("closeEditor").textContent="← Library";$("title").value=p.title;$("notes").value=p.notes;$("fav").textContent=p.favorite?"★":"☆";renderImagesFor(p);renderNoteImagesFor(p);renderConceptsFor(p);renderSubtopicsFor(p);renderSourcesFor(p);renderConnectionsFor(p);return}$("editor").classList.add("hidden");clearSubtopicContext()};
+$("closeEditor").onclick=()=>{if(window.__subtopicContext){let p=window.__subtopicContext.parent;window.__subtopicContext=null;$("closeEditor").textContent="← Library";$("title").value=p.title;$("notes").value=p.notes;$("fav").textContent=p.favorite?"★":"☆";renderImagesFor(p);renderNoteImagesFor(p);renderConceptsFor(p);renderChildTopicsFor(p);renderSourcesFor(p);renderConnectionsFor(p);return}$("editor").classList.add("hidden");clearSubtopicContext()};
 $("title").oninput=e=>{let t=currentRecord();t.title=e.target.value;save();render()};
 $("notes").oninput=e=>{let t=currentRecord();t.notes=e.target.value;save();render()};
 $("fav").onclick=()=>{let t=currentRecord();t.favorite=!t.favorite;save();renderCurrentEditor();render()};
@@ -130,7 +153,7 @@ $("images").onchange=async e=>{await addImagesTo(currentRecord().images,[...e.ta
 $("newConcept").onclick=createConcept;
 $("conceptForm").onsubmit=e=>{e.preventDefault();let target=currentRecord(),v=$("conceptName").value.trim();if(!v)return;if(editingConcept===null)target.concepts.push({id:id(),title:v,detail:$("conceptDetail").value.trim(),images:[]});else if(typeof editingConcept==="object")target.concepts[editingConcept.index].title=v,target.concepts[editingConcept.index].detail=$("conceptDetail").value.trim();else target.concepts[editingConcept].title=v,target.concepts[editingConcept].detail=$("conceptDetail").value.trim();save();$("conceptDialog").close();renderConceptsFor(target);editingConcept=null};
 $("newSubtopic").onclick=()=>{$("subtopicName").value="";$('subtopicDesc').value="";$("subtopicDialog").showModal()};
-$("subtopicForm").onsubmit=e=>{e.preventDefault();let t=currentRecord();t.subtopics.push({id:id(),title:$("subtopicName").value.trim(),desc:$("subtopicDesc").value.trim(),notes:"",images:[],noteImages:[],concepts:[],sources:[],links:[],subtopics:[],favorite:false,updated:Date.now()});save();$("subtopicDialog").close();renderSubtopicsFor(t)};
+$("subtopicForm").onsubmit=e=>{e.preventDefault();let t=currentRecord();t.subtopics.push({id:id(),title:$("subtopicName").value.trim(),desc:$("subtopicDesc").value.trim(),notes:"",images:[],noteImages:[],concepts:[],sources:[],links:[],subtopics:[],favorite:false,updated:Date.now()});save();$("subtopicDialog").close();renderChildTopicsFor(t);render()};
 $("addSource").onclick=()=>{let t=currentRecord(),n=$("sourceName").value.trim(),u=$("sourceUrl").value.trim();if(u){t.sources.push({name:n||u,url:u});$("sourceName").value="";$("sourceUrl").value="";save();renderSourcesFor(t)}};
 $("cleanExport").onclick=()=>{let t=currentRecord();download(t.title.replace(/[^a-z0-9]+/gi,"-")+".md",markdown(t),"text/markdown")};
 $("exportAll").onclick=$("backup").onclick=()=>download("knowledge-vault-v2-backup.json",JSON.stringify(state,null,2),"application/json");
