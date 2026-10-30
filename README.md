@@ -1,41 +1,18 @@
-# Knowledge Vault V2
+# Knowledge Vault
 
-A GitHub Pages-friendly personal knowledge database.
+GitHub Pages version of the personal Knowledge Vault.
 
-## V2 additions
+## Architecture
+Library → Collection / Label → Equal-status Main Topics.
 
-- Visual topic dashboard
-- Notes + screenshot + source + concept storage
-- Topic-to-topic connections
-- Interactive knowledge graph
-- Search across notes/concepts/topics
-- Recent and favorites views
-- AI Workspace that packages your library into prompts
-- Six AI workflows: explain, connect, gaps, quiz, chapter, compare
-- Markdown chapter export
-- JSON backup/restore
-- Print-friendly architecture for future PDF/DOCX generation
+A collection such as `IPO` is only an organizational label. `QuickMart` and `Anthropic` inside it are both main topics with the same capabilities. There is no parent/child topic hierarchy.
 
-## GitHub Pages
+## Files
+- `index.html`
+- `app.js`
+- `styles.css`
 
-Upload `index.html`, `styles.css`, and `app.js` to a repository, then enable GitHub Pages from the `main` branch/root.
+## Storage
+The app continues to use the existing browser storage key `knowledge_vault_v2`. On first launch after this upgrade, legacy V2 topic/subtopic data is migrated into collections and equal main topics in memory and saved back to the same key.
 
-## Important V2 architecture decision
-
-The static GitHub version does NOT put an OpenAI API key in browser code. The AI Workspace generates clean prompts/context that can be copied to ChatGPT.
-
-For a real integrated AI backend, the next version should use a server-side function (for example Cloudflare Workers, Vercel Functions, or Supabase Edge Functions) so the API key remains private.
-
-## Recommended V3
-
-- IndexedDB for much larger screenshot storage
-- Cloud sync + login
-- OCR from screenshots
-- AI-generated summaries and concept extraction
-- Automatic linking between related topics
-- PDF/DOCX book generation
-- "Send to ChatGPT" integration
-- Version history
-- Tags and collections
-- Timeline of when each concept was learned
-- Full-text + semantic search
+Images are resized/compressed in the browser before being stored.

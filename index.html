@@ -1,168 +1,21 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Knowledge Vault V2</title>
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<div id="app">
-  <header class="mobileBar">
-    <button id="menuToggle" class="hamburger" aria-label="Open navigation"><span></span><span></span><span></span></button>
-    <div class="mobileBrand"><div class="logo smallLogo">K</div><b>Knowledge Vault</b></div>
-  </header>
-  <div id="mobileShade" class="mobileShade hidden"></div>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Knowledge Vault</title><link rel="stylesheet" href="styles.css"></head><body>
+<div class="appShell"><header class="mobileBar"><button id="menuToggle" class="hamburger" aria-label="Open menu"><i></i><i></i><i></i></button><div class="mobileBrand"><span class="logo smallLogo">K</span><b>Knowledge Vault</b></div></header><div id="mobileShade" class="mobileShade hidden"></div>
+<aside id="sidebar" class="sidebar"><div class="brand"><span class="logo">K</span><div><b>Knowledge Vault</b><small>Personal learning system</small></div></div><button id="newTopic" class="primary newCollection">＋ New collection</button><nav><button class="nav active" data-view="library">▦ <span>Library</span></button><button class="nav" data-view="recent">◷ <span>Recent</span></button><button class="nav" data-view="favorites">★ <span>Favorites</span></button><button class="nav" data-view="graph">◎ <span>Knowledge graph</span></button></nav><div class="sidebarBottom"><button id="aiPack" class="nav">✦ <span>AI workspace</span></button><button id="backup" class="nav">↓ <span>Backup library</span></button><label class="nav import">↑ <span>Restore backup</span><input id="restore" type="file" accept=".json" hidden></label></div></aside>
+<main class="main"><header class="top"><div><span class="eyebrow">PERSONAL KNOWLEDGE SYSTEM</span><h1 id="heading">My knowledge</h1><p id="subheading">A clean home for ideas, mechanisms, evidence and connections.</p></div><div class="topRight"><div class="searchWrap">⌕<input id="search" placeholder="Search your knowledge…"></div><button id="exportAll" class="secondary">Export</button></div></header>
+<section id="libraryView"><div class="stats"><div><b id="statTopics">0</b><span>Main topics</span></div><div><b id="statNotes">0</b><span>Active notes</span></div><div><b id="statImages">0</b><span>Visuals</span></div><div><b id="statConcepts">0</b><span>Concepts</span></div></div><div id="cards" class="cards"></div><div id="empty" class="empty"><div class="emptyIcon">✦</div><h2>Build your first collection</h2><p>Use collections as labels such as IPO, ETF or Bonds. Inside each label, create equal-status main topics.</p><button class="primary" id="emptyNew">Create collection</button></div></section>
+<section id="graphView" class="hidden"><div class="sectionHead"><div><span class="eyebrow">RELATIONSHIP MAP</span><h2>Knowledge graph</h2></div><p>See how your main topics connect.</p></div><canvas id="graph"></canvas><div class="legend"><span>Each node = main topic</span><span>Lines = explicit connections</span></div></section></main></div>
 
-  <aside class="sidebar" id="sidebar">
-    <div class="brand"><div class="logo">K</div><div><b>Knowledge Vault</b><small>Personal learning system</small></div></div>
-    <button id="newTopic" class="primary">＋ New topic</button>
-    <nav>
-      <button class="nav active" data-view="library">▦ Library</button>
-      <button class="nav" data-view="recent">◷ Recent</button>
-      <button class="nav" data-view="favorites">★ Favorites</button>
-      <button class="nav" data-view="graph">◎ Knowledge graph</button>
-    </nav>
-    <div class="sidebarBottom">
-      <button id="aiPack" class="nav">✦ AI workspace</button>
-      <button id="backup" class="nav">↓ Backup library</button>
-      <label class="nav import">↑ Restore backup<input id="restore" type="file" accept=".json" hidden></label>
-    </div>
-  </aside>
+<dialog id="collectionDialog"><form class="dialog" id="collectionForm"><button type="button" class="close" onclick="collectionDialog.close()">×</button><span class="eyebrow">NEW COLLECTION</span><h2>Create a label</h2><p class="dialogHint">This is an organizational label, not a parent topic.</p><label>Label<input id="collectionName" required placeholder="IPO"></label><label>Description<textarea id="collectionDesc" placeholder="A short description of what this collection groups."></textarea></label><button class="primary">Create label</button></form></dialog>
+<dialog id="topicDialog"><form class="dialog" id="topicForm"><button type="button" class="close" onclick="topicDialog.close()">×</button><span class="eyebrow">MAIN TOPIC</span><h2>Add a main topic</h2><p class="dialogHint">This topic has the same status and capabilities as every other topic in the collection.</p><label>Name<input id="topicName" required placeholder="QuickMart"></label><label>Description<textarea id="topicDesc" placeholder="What are you studying here?"></textarea></label><button class="primary">Add topic</button></form></dialog>
 
-  <main class="main">
-    <header class="top">
-      <div><span class="eyebrow">YOUR LEARNING DATABASE</span><h1 id="heading">My knowledge</h1><p id="subheading">Capture information once. Build understanding over time.</p></div>
-      <div class="topRight"><input id="search" placeholder="Search everything…"><button id="exportAll" class="secondary">Export</button></div>
-    </header>
+<div id="editor" class="overlay hidden"><div class="editor"><header class="editorTop"><button id="closeEditor" class="secondary">← Library</button><div class="editorTitle"><div class="topicCrumb" id="topicCrumb">MAIN TOPIC</div><input id="title"><textarea id="topicDescription" placeholder="Short description"></textarea><small id="saveStatus">Saved locally</small></div><button id="fav" class="square">☆</button><button id="aiTopic" class="secondary">✦ AI</button></header><div class="tabs" id="editorTabs"><button class="tab active" data-tab="notes">Notes</button><button class="tab" data-tab="screens">Screenshots</button><button class="tab" data-tab="concepts">Concepts</button><button class="tab" data-tab="sources">Sources</button><button class="tab" data-tab="connections">Connections</button></div><div class="content">
+<div id="tab-notes" class="tabpane"><div class="sectionHead"><div><span class="eyebrow">WORKSPACE</span><h2>Notes</h2><p>Write freely. Build the explanation before polishing it.</p></div><div class="sectionActions"><button id="noteImagesBtn" class="secondary">＋ Visuals</button><button id="cleanExport" class="secondary">Export</button><input id="noteImages" type="file" accept="image/*" multiple hidden></div></div><textarea id="notes" class="bigText" placeholder="What is it?\nHow does it work?\nWhy does it exist?\nWho participates?\nNumbers, examples, questions and your own observations…"></textarea><div class="inlineSectionHead"><h3>Attached visuals</h3><span>Images compressed automatically for local storage.</span></div><div id="noteImageGrid" class="imageGrid compact"></div></div>
+<div id="tab-screens" class="tabpane hidden"><div class="sectionHead"><div><span class="eyebrow">VISUAL MEMORY</span><h2>Screenshots</h2><p>Evidence and references belonging to this main topic.</p></div><label class="secondary upload">＋ Add screenshots<input id="images" type="file" accept="image/*" multiple hidden></label></div><div id="imageGrid" class="imageGrid"></div></div>
+<div id="tab-concepts" class="tabpane hidden"><div class="sectionHead"><div><span class="eyebrow">CONCEPT INDEX</span><h2>Concepts</h2><p>Small, precise units of understanding you can revisit and edit.</p></div><button id="newConcept" class="primary">＋ New concept</button></div><div id="concepts" class="conceptList"></div><div id="conceptEmpty" class="emptySmall">No concepts yet. Create one when you meet an important term or mechanism.</div></div>
+<div id="tab-sources" class="tabpane hidden"><div class="sectionHead"><div><span class="eyebrow">REFERENCE LAYER</span><h2>Sources</h2><p>Keep the evidence behind your understanding.</p></div></div><div id="sources"></div><div class="addline"><input id="sourceName" placeholder="Source name"><input id="sourceUrl" placeholder="https://…"><button id="addSource" class="primary">Add</button></div></div>
+<div id="tab-connections" class="tabpane hidden"><div class="sectionHead"><div><span class="eyebrow">RELATIONSHIPS</span><h2>Connections</h2><p>Connect this main topic to other main topics. Collections do not create hierarchy.</p></div></div><div id="connections"></div></div>
+</div></div></div>
 
-    <section id="libraryView">
-      <div class="stats">
-        <div><b id="statTopics">0</b><span>Topics</span></div>
-        <div><b id="statNotes">0</b><span>Notes</span></div>
-        <div><b id="statImages">0</b><span>Screenshots</span></div>
-        <div><b id="statConcepts">0</b><span>Concepts</span></div>
-      </div>
-      <div id="cards" class="cards"></div>
-      <div id="empty" class="empty"><div class="emptyIcon">✦</div><h2>Start building your knowledge</h2><p>Create boxes for ETFs, Bonds, IPOs, Mortgages, Repos, Banks — anything you study.</p><button class="primary" id="emptyNew">Create first topic</button></div>
-    </section>
-
-    <section id="graphView" class="hidden">
-      <div class="sectionHead"><div><span class="eyebrow">CONNECTIONS</span><h2>Knowledge graph</h2></div><p>Connect topics to see how your ideas relate.</p></div>
-      <canvas id="graph"></canvas>
-      <div id="graphLegend" class="legend"></div>
-    </section>
-  </main>
-</div>
-
-<dialog id="newDialog">
-<form class="dialog" id="newForm">
-<button type="button" class="close" onclick="newDialog.close()">×</button>
-<span class="eyebrow">NEW KNOWLEDGE BOX</span><h2>Create a topic</h2>
-<label>Name<input id="newName" required placeholder="ETFs"></label>
-<label>Description<textarea id="newDesc" placeholder="What is this topic about?"></textarea></label>
-<button class="primary">Create topic</button>
-</form>
-</dialog>
-
-<div id="editor" class="overlay hidden">
-<div class="editor">
-<header class="editorTop">
-<button id="closeEditor" class="secondary">← Library</button>
-<div class="editorTitle"><input id="title"><small id="saveStatus">Saved locally</small></div>
-<button id="fav" class="square">☆</button><button id="newSubtopicTop" class="square addChildTop" aria-label="Add topic inside this topic" title="Add topic inside this topic">＋</button><button id="aiTopic" class="secondary">✦ AI tools</button>
-</header>
-<div class="editorBody">
-  <div class="childTopicsPanel" id="childTopicsPanel">
-    <div class="childTopicsHead">
-      <div>
-        <span class="eyebrow">TOPIC STRUCTURE</span>
-        <h3 id="childTopicsTitle">Related topics</h3>
-        <p id="childTopicsHint">This topic can stand alone or contain smaller topics inside it.</p>
-      </div>
-      <button id="newSubtopic" class="addTopicCompact" aria-label="Add topic inside this topic" title="Add topic inside this topic">＋</button>
-    </div>
-    <div id="childTopicList" class="childTopicList"></div>
-    <div id="childTopicEmpty" class="childTopicEmpty">No topics inside this one yet. Use <b>＋ Add topic</b> to turn this into a container.</div>
-  </div>
-  <div class="tabs" id="editorTabs">
-    <button class="tab active" data-tab="notes">Notes</button>
-    <button class="tab" data-tab="screens">Screenshots</button>
-    <button class="tab" data-tab="concepts">Concepts</button>
-    <button class="tab" data-tab="sources">Sources</button>
-    <button class="tab" data-tab="connections">Connections</button>
-  </div>
-  <div class="content">
-    <div id="tab-notes" class="tabpane">
-      <div class="sectionHead"><div><span class="eyebrow">RAW KNOWLEDGE</span><h2>What I learned</h2><p>One note can carry text and as many visual references as your browser storage allows.</p></div><button id="noteImagesBtn" class="secondary">＋ Add images</button><button id="cleanExport" class="secondary">Export chapter</button><input id="noteImages" type="file" accept="image/*" multiple hidden></div>
-      <textarea id="notes" class="bigText" placeholder="Write the information exactly as you encounter it.
-
-Useful pattern:
-• What is it?
-• How does it work?
-• Why does it exist?
-• Who are the participants?
-• Real example
-• Numbers / facts
-• My questions
-• Connections to other topics"></textarea>
-      <div class="inlineSectionHead"><h3>Note images</h3><span>Visual evidence attached directly to these notes</span></div>
-      <div id="noteImageGrid" class="imageGrid compact"></div>
-    </div>
-
-    <div id="tab-screens" class="tabpane hidden">
-      <div class="sectionHead"><div><span class="eyebrow">VISUAL MEMORY</span><h2>Topic screenshots</h2><p>General screenshots belonging to the whole topic.</p></div><label class="secondary upload">＋ Add screenshots<input id="images" type="file" accept="image/*" multiple hidden></label></div>
-      <div id="imageGrid" class="imageGrid"></div>
-    </div>
-
-    <div id="tab-concepts" class="tabpane hidden">
-      <div class="sectionHead"><div><span class="eyebrow">CONCEPT INDEX</span><h2>Key concepts</h2><p>Concepts are now editable records. Each one can carry its own explanation and visual references.</p></div><button id="newConcept" class="primary">＋ New concept</button></div>
-      <div id="concepts" class="conceptList"></div>
-      <div id="conceptEmpty" class="emptySmall">No concepts yet. Create the first one above.</div>
-    </div>
-
-    <div id="tab-sources" class="tabpane hidden">
-      <div class="sectionHead"><div><span class="eyebrow">REFERENCE</span><h2>Sources</h2></div></div>
-      <div id="sources"></div><div class="addline"><input id="sourceName" placeholder="Source name"><input id="sourceUrl" placeholder="https://…"><button id="addSource" class="primary">Add</button></div>
-    </div>
-
-    <div id="tab-connections" class="tabpane hidden">
-      <div class="sectionHead"><div><span class="eyebrow">RELATIONSHIPS</span><h2>Connected topics</h2></div><p>Build the structure of your financial-market knowledge.</p></div>
-      <div id="connections"></div>
-    </div>
-  </div>
-</div></div>
-</div>
-
-<dialog id="conceptDialog">
-<form class="dialog" id="conceptForm">
-<button type="button" class="close" onclick="conceptDialog.close()">×</button>
-<span class="eyebrow">CONCEPT RECORD</span><h2 id="conceptDialogTitle">Create concept</h2>
-<label>Concept name<input id="conceptName" required placeholder="Creation / redemption"></label>
-<label>Explanation<textarea id="conceptDetail" placeholder="Explain the mechanism, why it exists, examples, distinctions, questions…"></textarea></label>
-<button class="primary">Save concept</button>
-</form>
-</dialog>
-
-<dialog id="subtopicDialog">
-<form class="dialog" id="subtopicForm">
-<button type="button" class="close" onclick="subtopicDialog.close()">×</button>
-<span class="eyebrow">TOPIC STRUCTURE</span><h2>Add topic inside</h2>
-<label>Topic name<input id="subtopicName" required placeholder="QuickMart"></label>
-<label>Description<textarea id="subtopicDesc" placeholder="What does this topic cover?"></textarea></label>
-<button class="primary">Add topic</button>
-</form>
-</dialog>
-
-<div id="aiPanel" class="aiPanel hidden">
-<div class="aiHead"><div><span class="eyebrow">AI WORKSPACE</span><h2>Turn knowledge into something useful</h2></div><button id="closeAI" class="square">×</button></div>
-<p class="muted">V2 prepares your selected knowledge as a clean context package. You can paste it into ChatGPT now.</p>
-<div class="aiGrid">
-<button data-ai="explain">Explain at institutional level</button><button data-ai="connect">Find connections</button><button data-ai="gaps">Find knowledge gaps</button><button data-ai="quiz">Quiz me</button><button data-ai="chapter">Turn into a chapter</button><button data-ai="compare">Build a comparison</button>
-</div>
-<textarea id="aiPrompt" class="bigText" placeholder="Your AI-ready prompt will appear here…"></textarea>
-<div class="aiActions"><button id="copyAI" class="primary">Copy prompt</button><button id="downloadAI" class="secondary">Save prompt</button></div>
-</div>
-<script src="app.js"></script>
-</body>
-</html>
+<dialog id="conceptDialog"><form class="dialog" id="conceptForm"><button type="button" class="close" onclick="conceptDialog.close()">×</button><span class="eyebrow">CONCEPT RECORD</span><h2 id="conceptDialogTitle">Create concept</h2><label>Concept name<input id="conceptName" required placeholder="Creation / redemption"></label><label>Explanation<textarea id="conceptDetail" placeholder="Explain the mechanism, why it exists, examples and distinctions…"></textarea></label><button class="primary">Save concept</button></form></dialog>
+<div id="aiPanel" class="aiPanel hidden"><div class="aiHead"><div><span class="eyebrow">AI WORKSPACE</span><h2>Work with your knowledge</h2></div><button id="closeAI" class="square">×</button></div><p class="muted">Generate a clean context package you can paste into ChatGPT.</p><div class="aiGrid"><button data-ai="explain">Institutional explanation</button><button data-ai="connect">Find connections</button><button data-ai="gaps">Find gaps</button><button data-ai="quiz">Quiz me</button><button data-ai="chapter">Make a chapter</button><button data-ai="compare">Compare</button></div><textarea id="aiPrompt" class="bigText" placeholder="AI-ready prompt…"></textarea><div class="aiActions"><button id="copyAI" class="primary">Copy prompt</button><button id="downloadAI" class="secondary">Save prompt</button></div></div>
+<script src="app.js"></script></body></html>
