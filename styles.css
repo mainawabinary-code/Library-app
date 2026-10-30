@@ -34,3 +34,21 @@
 .addTopicCompact{width:38px;height:34px;flex:0 0 38px;padding:0;border:1px solid var(--line);border-radius:9px;background:#151c24;color:var(--text);font-size:20px;line-height:1;display:grid;place-items:center;cursor:pointer}
 .addTopicCompact:hover{border-color:#66746a;background:#1b2425}
 @media(max-width:800px){.addTopicCompact{width:34px;height:32px;flex-basis:34px;font-size:18px}}
+
+
+/* Progressive topic hierarchy: show child-topic workspace only after the topic has children. */
+.addChildTop{font-size:20px;line-height:1;min-width:42px;width:42px;height:42px;padding:0;display:grid;place-items:center;background:#121923}
+.childTopicsPanel{border:1px solid var(--line);background:linear-gradient(145deg,#111821,#0d131a);border-radius:15px;padding:16px 18px;margin:0}
+.childTopicsHead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.childTopicsHead h3{margin:6px 0 4px;font-size:20px}
+.childTopicsHead p{margin:0;color:var(--muted);font-size:12px;line-height:1.45}
+.childTopicList{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:14px}
+.childTopicCard{position:relative;min-height:112px;border:1px solid var(--line);background:#10161e;border-radius:12px;padding:12px;cursor:pointer;transition:.15s}
+.childTopicCard:hover{border-color:#4a5665;transform:translateY(-2px)}
+.childTopicIcon{width:32px;height:32px;border-radius:9px;background:#1a2230;color:#b9c7bd;display:grid;place-items:center;font-weight:800;font-size:10px}
+.childTopicMain h4{margin:9px 0 3px;font-size:14px}
+.childTopicMain p{margin:0;color:var(--muted);font-size:10px}
+.childTopicMeta{margin-top:11px;color:#6f7b8c;font-size:9px}
+.childTopicArrow{position:absolute;right:11px;top:45px;color:#718093;font-size:20px}
+.childTopicEmpty{display:none}
+@media(max-width:800px){.editorTop{gap:6px}.addChildTop{width:38px;height:38px;min-width:38px}.childTopicsPanel{padding:13px 14px}.childTopicList{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.childTopicCard{min-height:105px;padding:10px}}

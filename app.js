@@ -90,12 +90,17 @@ function childCard(s,i){
   </article>`;
 }
 function renderChildTopicsFor(t){
+  const panel=$("childTopicsPanel");
   const list=$("childTopicList");
-  if(!list)return;
+  if(!panel||!list)return;
+  const hasChildren=Array.isArray(t.subtopics)&&t.subtopics.length>0;
+  // Progressive hierarchy: a single topic stays clean. The child-topic area appears only when it is actually being used.
+  panel.classList.toggle("hidden",!hasChildren);
+  if(!hasChildren){list.innerHTML="";return;}
   list.innerHTML=t.subtopics.map((s,i)=>childCard(s,i)).join("");
-  $("childTopicEmpty").classList.toggle("hidden",t.subtopics.length>0);
-  $("childTopicsTitle").textContent=t.subtopics.length?"Topics inside this topic":"Related topics";
-  $("childTopicsHint").textContent=t.subtopics.length?"These are child topics contained inside this topic. Each opens the same full knowledge workspace.":"This topic can stand alone. Add a topic here whenever this subject naturally contains smaller subjects.";
+  $("childTopicEmpty").classList.add("hidden");
+  $("childTopicsTitle").textContent="Topics inside this topic";
+  $("childTopicsHint").textContent="Child topics live directly inside this container. Each opens the same full knowledge workspace.";
   document.querySelectorAll("[data-child-open]").forEach(b=>b.onclick=()=>openChildTopic(+b.dataset.childOpen));
 }
 function openChildTopic(i){
@@ -152,7 +157,9 @@ $("noteImages").onchange=async e=>{await addImagesTo(currentRecord().noteImages,
 $("images").onchange=async e=>{await addImagesTo(currentRecord().images,[...e.target.files]);renderImagesFor(currentRecord());e.target.value=""};
 $("newConcept").onclick=createConcept;
 $("conceptForm").onsubmit=e=>{e.preventDefault();let target=currentRecord(),v=$("conceptName").value.trim();if(!v)return;if(editingConcept===null)target.concepts.push({id:id(),title:v,detail:$("conceptDetail").value.trim(),images:[]});else if(typeof editingConcept==="object")target.concepts[editingConcept.index].title=v,target.concepts[editingConcept.index].detail=$("conceptDetail").value.trim();else target.concepts[editingConcept].title=v,target.concepts[editingConcept].detail=$("conceptDetail").value.trim();save();$("conceptDialog").close();renderConceptsFor(target);editingConcept=null};
-$("newSubtopic").onclick=()=>{$("subtopicName").value="";$('subtopicDesc').value="";$("subtopicDialog").showModal()};
+function openSubtopicDialog(){$("subtopicName").value="";$('subtopicDesc').value="";$('subtopicDialog').showModal()}
+$("newSubtopic").onclick=openSubtopicDialog;
+$("newSubtopicTop").onclick=openSubtopicDialog;
 $("subtopicForm").onsubmit=e=>{e.preventDefault();let t=currentRecord();t.subtopics.push({id:id(),title:$("subtopicName").value.trim(),desc:$("subtopicDesc").value.trim(),notes:"",images:[],noteImages:[],concepts:[],sources:[],links:[],subtopics:[],favorite:false,updated:Date.now()});save();$("subtopicDialog").close();renderChildTopicsFor(t);render()};
 $("addSource").onclick=()=>{let t=currentRecord(),n=$("sourceName").value.trim(),u=$("sourceUrl").value.trim();if(u){t.sources.push({name:n||u,url:u});$("sourceName").value="";$("sourceUrl").value="";save();renderSourcesFor(t)}};
 $("cleanExport").onclick=()=>{let t=currentRecord();download(t.title.replace(/[^a-z0-9]+/gi,"-")+".md",markdown(t),"text/markdown")};
